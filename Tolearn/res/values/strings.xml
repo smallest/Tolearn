@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Tolearn</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="add_title">填入标题</string>
+    <string name="finish">完成</string>
+    <string name="add_your_desc">写下描述信息</string>
+	<string-array name="log_list">
+        <item>ToLearn</item>
+        <item>Need</item>
+        <item>Repo</item>
+        <item>Archive</item>
+        <item>Record</item>
+        <item>Trash</item>
+    </string-array>
+</resources>
