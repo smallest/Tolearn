@@ -7,7 +7,8 @@
     <string name="add_title">填入标题</string>
     <string name="finish">完成</string>
     <string name="add_your_desc">写下描述信息</string>
-	<string-array name="log_list">
+
+    <string-array name="nav_list">
         <item>ToLearn</item>
         <item>Need</item>
         <item>Repo</item>
@@ -15,4 +16,8 @@
         <item>Record</item>
         <item>Trash</item>
     </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
 </resources>

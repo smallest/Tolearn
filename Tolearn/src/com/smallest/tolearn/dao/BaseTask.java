@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 public class BaseTask {
 	Calendar startTime;
-	Calendar finishTime;
+	Calendar endTime;
 	ArrayList<Tag> tagList;
 	Tag tag;
 	String description;

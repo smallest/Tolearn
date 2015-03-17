@@ -1,5 +1,8 @@
+
 package com.smallest.tolearn.fragment;
 
-public class NeedFragment {
+import android.app.Fragment;
+
+public class NeedFragment extends Fragment {
 
 }

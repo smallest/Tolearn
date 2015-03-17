@@ -1,5 +1,7 @@
 package com.smallest.tolearn.fragment;
 
-public class RecordFragment {
+import android.app.Fragment;
+
+public class RecordFragment extends Fragment{
 
 }
