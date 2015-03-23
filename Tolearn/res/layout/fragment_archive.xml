@@ -22,8 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="48dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginRight="@dimen/add_button_margin"
+        android:layout_marginBottom="@dimen/add_button_margin"
         android:src="@drawable/add_64" />
 
 </RelativeLayout>

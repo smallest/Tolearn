@@ -13,12 +13,16 @@
         <item>Need</item>
         <item>Repo</item>
         <item>Archive</item>
-        <item>Record</item>
+        <item>Mark</item>
         <item>Trash</item>
     </string-array>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="search_tag_hint">Search Tag</string>
+
+    <!-- toast -->
+    <string name="no_title_toast">Please input the title</string>
+    <!-- display -->
 
 </resources>

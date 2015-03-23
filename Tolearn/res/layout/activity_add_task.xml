@@ -3,39 +3,84 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<Button android:id="@+id/finish_btn"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="@string/finish"
-	    android:gravity="center"/>
+
+    <LinearLayout
+        android:id="@+id/tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/finish_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_background"
+            android:gravity="center"
+            android:text="@string/finish"
+            android:textColor="@color/bt_text_color" />
+    </LinearLayout>
+
     <EditText
         android:id="@+id/title_et"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@null"
         android:hint="@string/add_title" />
 
     <LinearLayout
         android:id="@+id/extra_info"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
 
         <ImageButton
             android:id="@+id/tag_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/tag" />
+            android:background="@null"
+            android:src="@drawable/tag32" />
+
+        <TextView
+            android:id="@+id/tag_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="test"
+            android:textColor="@color/theme_text_color"
+            android:textSize="@dimen/font_middle" />
 
         <ImageButton
             android:id="@+id/src_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/info" />
+            android:layout_marginLeft="16dp"
+            android:background="@null"
+            android:src="@drawable/info32_1" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:background="#dddddd" />
 
     <EditText
         android:id="@+id/desc_et"
-        android:hint="@string/add_your_desc"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" 
-        android:gravity="top"/>
+        android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@null"
+        android:gravity="top"
+        android:hint="@string/add_your_desc" />
+
 </LinearLayout>
