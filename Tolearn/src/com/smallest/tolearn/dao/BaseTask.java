@@ -1,15 +1,25 @@
 package com.smallest.tolearn.dao;
 
-
 public class BaseTask {
 	private String title = "";
 	private String startTime = "";
 	private String endTime = "";
 	private String desc = "";
 	private String tid = "";
-	private String tag = "";
+	private String[] tags = { "" };
 	private String src = "";
 	private String comment = "";
+	public static int STATE_CREATING = -1;
+	public static int STATE_REPO = 0;
+	public static int STATE_TODO = 1;
+	public static int STATE_TRASH = 2;
+	public static int STATE_ARCHIVE = 3;
+	public static int STATE_REMOVED = 4;
+	/**
+	 * state,-1:处于创建状态,0:处于repo中,1:处于todo中,2:处于trash中,3:处于完成的状态,4:处于已删除的状态
+	 * */
+	private int state = 0;
+	private Records records;
 
 	public String getDesc() {
 		return desc;
@@ -47,15 +57,13 @@ public class BaseTask {
 		return endTime;
 	}
 
-	public String getTag() {
-		return tag;
+	public String[] getTags() {
+		return tags;
 	}
-
 
 	public String getComment() {
 		return comment;
 	}
-
 
 	public void setTitle(String title) {
 		this.title = title;
@@ -69,14 +77,19 @@ public class BaseTask {
 		this.endTime = endTime;
 	}
 
-	public void setTag(String tag) {
-		this.tag = tag;
+	public void setTag(String[] tags) {
+		this.tags = tags;
 	}
-
 
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
 
+	public int getState() {
+		return state;
+	}
 
+	public void setState(int state) {
+		this.state = state;
+	}
 }

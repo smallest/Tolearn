@@ -20,9 +20,11 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="search_tag_hint">Search Tag</string>
+    <string name="add_tag">Add tag</string>
 
     <!-- toast -->
     <string name="no_title_toast">Please input the title</string>
+    <string name="add_task_failed">Add task failed</string>
     <!-- display -->
 
 </resources>

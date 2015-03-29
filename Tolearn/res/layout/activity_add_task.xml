@@ -27,8 +27,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:background="@null"
-        android:hint="@string/add_title" />
+        android:hint="@string/add_title"
+        android:textSize="@dimen/font_large" />
 
     <LinearLayout
         android:id="@+id/extra_info"
@@ -48,11 +50,10 @@
             android:src="@drawable/tag32" />
 
         <TextView
-            android:id="@+id/tag_name"
-            android:layout_width="wrap_content"
+            android:id="@+id/add_task_tag_tv"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:text="test"
             android:textColor="@color/theme_text_color"
             android:textSize="@dimen/font_middle" />
 

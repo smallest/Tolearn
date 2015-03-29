@@ -12,6 +12,7 @@ import com.smallest.tolearn.db.TaskDBHelper;
 import com.smallest.tolearn.utils.MyConstants;
 
 public class TaskDisplayActivity extends Activity {
+	private TextView tagTv;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,6 +26,8 @@ public class TaskDisplayActivity extends Activity {
 			finish();
 		}
 		TextView titleTv = (TextView) findViewById(R.id.title_tv);
+		tagTv = (TextView) findViewById(R.id.task_display_tag_tv);
+		tagTv.setText(String.valueOf(task.getTags().length));
 		TextView descTv = (TextView) findViewById(R.id.desc_tv);
 		titleTv.setText(task.getTitle());
 		descTv.setText(task.getDesc());

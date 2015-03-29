@@ -1,6 +1,5 @@
 package com.smallest.tolearn.fragment;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Fragment;
@@ -20,15 +19,16 @@ import com.smallest.tolearn.R;
 import com.smallest.tolearn.activity.AddTaskActivity;
 import com.smallest.tolearn.activity.TaskDisplayActivity;
 import com.smallest.tolearn.dao.BaseTask;
-import com.smallest.tolearn.db.TaskDBHelper;
 import com.smallest.tolearn.utils.MyConstants;
+import com.smallest.tolearn.utils.TaskManager;
 import com.smallest.tolearn.utils.TimeUtils;
 
 public class RepoFragment extends Fragment {
 	private ImageView addTaskImageV;
 	private ListView repoLv;
-	ArrayList<BaseTask> taskList;
-	ArrayAdapter<BaseTask> repoAdapter;
+	private List<BaseTask> taskList;
+	private ArrayAdapter<BaseTask> repoAdapter;
+	private TaskManager taskManager = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,16 +45,25 @@ public class RepoFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
+		taskManager = TaskManager.getInstance(getActivity());
 		getDataFromRepo();
 		return view;
 	}
 
 	public boolean getDataFromRepo() {
-		taskList = TaskDBHelper.getCurrentBaseTask(getActivity());
+		taskList = taskManager.getRepoList();
 		repoAdapter = new RepoAdapter<BaseTask>(getActivity(),
 				R.layout.repo_adapter_item, taskList);
 		repoLv.setAdapter(repoAdapter);
 		repoLv.setOnItemClickListener(new RepoListListener());
+		taskManager
+				.setOnRepoSetChangedListener(new TaskManager.OnRepoSetChangedListener() {
+
+					@Override
+					public void dataSetChanged() {
+						repoAdapter.notifyDataSetChanged();
+					}
+				});
 		return true;
 	}
 
