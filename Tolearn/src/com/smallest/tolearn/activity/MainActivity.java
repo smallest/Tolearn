@@ -3,6 +3,9 @@ package com.smallest.tolearn.activity;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -11,6 +14,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +30,8 @@ import com.smallest.tolearn.fragment.NeedFragment;
 import com.smallest.tolearn.fragment.RepoFragment;
 import com.smallest.tolearn.fragment.TolearnFragment;
 import com.smallest.tolearn.fragment.TrashFragment;
+import com.smallest.tolearn.utils.FileUtils;
+import com.smallest.tolearn.utils.MyConstants;
 
 public class MainActivity extends Activity {
 	private DrawerLayout mDrawerLayout;
@@ -38,9 +44,16 @@ public class MainActivity extends Activity {
 	private Fragment[] centerListItem;
 	private static Boolean isQuit = false;
 	Timer timer = new Timer();
+	private static boolean testFlag = true;
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (getFragmentManager().findFragmentByTag(
+				MyConstants.TAG_TASKS_FRAGMENT) != null) {
+			// 不知道为什么，只能是以下两行的组合才能达到效果
+			super.onKeyDown(keyCode, event);
+			return true;
+		}
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (isQuit == false) {
 				isQuit = true;
@@ -66,57 +79,67 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Logger log = LoggerFactory.getLogger(MainActivity.class);
+		boolean flag = FileUtils.syncDbToSdcard();
+		if (!flag) {
+			log.error("syncDbToSdcard failed");
+		}
+		try {
+			centerListItem = new Fragment[6];// TODO 不用都先new吧！
+			centerListItem[0] = new TolearnFragment();
+			centerListItem[1] = new NeedFragment();
+			centerListItem[2] = new RepoFragment();
+			centerListItem[3] = new ArchiveFragment();
+			centerListItem[4] = new MarkFragment();
+			centerListItem[5] = new TrashFragment();
 
-		centerListItem = new Fragment[6];// TODO 不用都先new吧！
-		centerListItem[0] = new TolearnFragment();
-		centerListItem[1] = new NeedFragment();
-		centerListItem[2] = new RepoFragment();
-		centerListItem[3] = new ArchiveFragment();
-		centerListItem[4] = new MarkFragment();
-		centerListItem[5] = new TrashFragment();
+			mTitle = mDrawerTitle = getTitle();
+			mDrawerTitles = getResources().getStringArray(R.array.nav_list);
+			mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+			mDrawerList = (ListView) findViewById(R.id.left_drawer);
 
-		mTitle = mDrawerTitle = getTitle();
-		mDrawerTitles = getResources().getStringArray(R.array.nav_list);
-		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+			// set a custom shadow that overlays the main content when the
+			// drawer
+			// opens
+			mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+					GravityCompat.START);
+			// set up the drawer's list view with items and click listener
+			mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+					R.layout.drawer_list_item, R.id.list_label, mDrawerTitles));
+			mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
-		// set a custom shadow that overlays the main content when the drawer
-		// opens
-		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
-				GravityCompat.START);
-		// set up the drawer's list view with items and click listener
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_list_item, R.id.list_label, mDrawerTitles));
-		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+			// enable ActionBar app icon to behave as action to toggle nav
+			// drawer
+			getActionBar().setDisplayHomeAsUpEnabled(true);
+			// getActionBar().setHomeButtonEnabled(true);
 
-		// enable ActionBar app icon to behave as action to toggle nav drawer
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		// getActionBar().setHomeButtonEnabled(true);
+			// ActionBarDrawerToggle ties together the the proper interactions
+			// between the sliding drawer and the action bar app icon
+			mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+			mDrawerLayout, /* DrawerLayout object */
+			R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+			R.string.drawer_open, /*
+								 * "open drawer" description for accessibility
+								 */
+			R.string.drawer_close /*
+								 * "close drawer" description for accessibility
+								 */
+			) {
+				public void onDrawerClosed(View view) {
+					getActionBar().setTitle(mTitle);
+				}
 
-		// ActionBarDrawerToggle ties together the the proper interactions
-		// between the sliding drawer and the action bar app icon
-		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
-		mDrawerLayout, /* DrawerLayout object */
-		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
-		R.string.drawer_open, /*
-							 * "open drawer" description for accessibility
-							 */
-		R.string.drawer_close /*
-							 * "close drawer" description for accessibility
-							 */
-		) {
-			public void onDrawerClosed(View view) {
-				getActionBar().setTitle(mTitle);
+				public void onDrawerOpened(View drawerView) {
+					getActionBar().setTitle(mDrawerTitle);
+				}
+			};
+			mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+			if (savedInstanceState == null) {
+				selectItem(0);
 			}
-
-			public void onDrawerOpened(View drawerView) {
-				getActionBar().setTitle(mDrawerTitle);
-			}
-		};
-		mDrawerLayout.setDrawerListener(mDrawerToggle);
-
-		if (savedInstanceState == null) {
-			selectItem(0);
+		} catch (Exception e) {
+			log.error(e.getMessage());
 		}
 	}
 
@@ -143,8 +166,10 @@ public class MainActivity extends Activity {
 
 	private void selectItem(int position) {
 		FragmentManager fragmentManager = getFragmentManager();
-		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, centerListItem[position]).commit();
+		fragmentManager
+				.beginTransaction()
+				.replace(R.id.content_frame, centerListItem[position],
+						mDrawerTitles[position]).commit();
 		// update selected item and title, then close the drawer
 		mDrawerList.setItemChecked(position, true);
 		setTitle(mDrawerTitles[position]);

@@ -17,6 +17,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/add_button_margin"
         android:layout_marginRight="@dimen/add_button_margin"
-        android:src="@drawable/add_64" />
+        android:src="@drawable/ic_compose" />
 
 </RelativeLayout>

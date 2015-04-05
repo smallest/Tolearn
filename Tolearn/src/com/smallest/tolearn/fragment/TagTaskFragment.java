@@ -1,11 +1,8 @@
 package com.smallest.tolearn.fragment;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,14 +19,16 @@ import android.widget.TextView;
 
 import com.smallest.tolearn.R;
 import com.smallest.tolearn.activity.AddTaskActivity;
+import com.smallest.tolearn.activity.TaskDisplayActivity;
 import com.smallest.tolearn.dao.BaseTask;
 import com.smallest.tolearn.utils.MyConstants;
 import com.smallest.tolearn.utils.TaskManager;
+import com.smallest.tolearn.utils.TimeUtils;
 
-public class ArchiveFragment extends Fragment {
+public class TagTaskFragment extends Fragment {
 	private ImageView addTaskImageV;
-	private ListView archiveLv;
-	private Map<String, String> tagMap;
+	private ListView taskLv;
+	private List<BaseTask> taskList;
 	private TaskManager taskManager;
 	private BaseAdapter mBaseAdapter;
 
@@ -38,7 +37,7 @@ public class ArchiveFragment extends Fragment {
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
 		Log.d("tolearn", "archivefragment onCreate");
-		View view = inflater.inflate(R.layout.fragment_archive, container,
+		View view = inflater.inflate(R.layout.fragment_tag_tasks, container,
 				false);
 		addTaskImageV = (ImageView) view.findViewById(R.id.add_task_btn);
 		addTaskImageV.setOnClickListener(new View.OnClickListener() {
@@ -49,53 +48,49 @@ public class ArchiveFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
-		archiveLv = (ListView) view.findViewById(R.id.tag_lv);
+		taskLv = (ListView) view.findViewById(R.id.tag_lv);
 		taskManager = TaskManager.getInstance(getActivity());
-		tagMap = taskManager.getArchiveTagsMap();
-		mBaseAdapter = new ArchiveAdapter(getActivity(), tagMap);
-		archiveLv.setAdapter(mBaseAdapter);
-		archiveLv.setOnItemClickListener(new OnItemClickListener() {
+		String tagName = getArguments().getString(MyConstants.TAG_DISPALY);
+		if (tagName != null && !tagName.isEmpty()) {
+			taskList = taskManager.getArchiveTasksByTag(tagName);
+		}
+		mBaseAdapter = new TagTaskAdapter(getActivity(), taskList);
+		taskLv.setAdapter(mBaseAdapter);
+		taskLv.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Fragment tagTaskFragment = new TagTaskFragment();
-				Bundle bundle = new Bundle();
-				bundle.putString(MyConstants.TAG_DISPALY,
-						((String) mBaseAdapter.getItem(position)));
-				tagTaskFragment.setArguments(bundle);
-				FragmentTransaction transaction = getFragmentManager()
-						.beginTransaction();
-				transaction.replace(R.id.content_frame, tagTaskFragment,
-						MyConstants.TAG_TASKS_FRAGMENT);
-				String archiveTag = getResources().getStringArray(
-						R.array.nav_list)[3];
-				transaction.addToBackStack(null);
-				transaction.commit();
+				Intent intent = new Intent(getActivity(),
+						TaskDisplayActivity.class);
+				String tid = taskList.get(position).getTid();
+				intent.putExtra(MyConstants.TASK_ID, tid);
+				startActivity(intent);
 			}
 		});
 		return view;
 	}
 
-	public class ArchiveAdapter extends BaseAdapter {
-		private Map<String, String> mTagMap;
+	public class TagTaskAdapter extends BaseAdapter {
 		private Context mContext;
-		private List<String> mTagKeyList;
+		private List<BaseTask> taskList;
 
-		public ArchiveAdapter(Context mContext, Map<String, String> tagMap) {
+		public TagTaskAdapter(Context mContext, List<BaseTask> taskList) {
 			this.mContext = mContext;
-			this.mTagMap = tagMap;
-			this.mTagKeyList = new ArrayList<String>(tagMap.keySet());
+			this.taskList = taskList;
 		}
 
 		@Override
 		public int getCount() {
-			return mTagMap.size();
+			if (taskList == null) {
+				return 0;
+			}
+			return taskList.size();
 		}
 
 		@Override
-		public String getItem(int position) {
-			return mTagKeyList.get(position);
+		public BaseTask getItem(int position) {
+			return taskList.get(position);
 		}
 
 		@Override
@@ -107,13 +102,15 @@ public class ArchiveFragment extends Fragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				convertView = LayoutInflater.from(mContext).inflate(
-						R.layout.archive_adapter_item, null);
+						R.layout.tolearn_adapter_item, null);
 			} else {
 			}
-			String tagName = (String) getItem(position);
-			((TextView) convertView.findViewById(R.id.text1)).setText(tagName);
-			((TextView) convertView.findViewById(R.id.text2)).setText("("
-					+ mTagMap.get(tagName) + ")");
+			BaseTask task = getItem(position);
+			long mimsecond = Long.parseLong(taskList.get(position).getTid());
+			((TextView) convertView.findViewById(R.id.text1)).setText(task
+					.getTitle());
+			((TextView) convertView.findViewById(R.id.text2)).setText(TimeUtils
+					.secondToTime(String.valueOf(mimsecond / 1000)));
 			return convertView;
 		}
 	}

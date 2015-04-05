@@ -8,6 +8,9 @@
         android:minSdkVersion="15"
         android:targetSdkVersion="18" />
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -38,6 +41,14 @@
             android:name="com.smallest.tolearn.activity.EditTagActivity"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Dialog" >
+        </activity>
+        <activity
+            android:name="com.smallest.tolearn.activity.CommentActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.smallest.tolearn.activity.EditTaskActivity"
+            android:label="@string/app_name" >
         </activity>
     </application>
 

@@ -4,9 +4,11 @@
     <string name="app_name">Tolearn</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="add_title">填入标题</string>
-    <string name="finish">完成</string>
+    <string name="comment">comment</string>
+    <string name="finish">finish</string>
+    <string name="add_title">add title</string>
     <string name="add_your_desc">写下描述信息</string>
+    <string name="add_comment">add comment</string>
 
     <string-array name="nav_list">
         <item>ToLearn</item>
@@ -20,11 +22,14 @@
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
     <string name="search_tag_hint">Search Tag</string>
+    <string name="search_hint">Search</string>
     <string name="add_tag">Add tag</string>
 
     <!-- toast -->
     <string name="no_title_toast">Please input the title</string>
     <string name="add_task_failed">Add task failed</string>
+    <string name="modify_task_failed">Modify task failed</string>
+    <string name="comment_needed">Leave your comment before finish</string>
     <!-- display -->
 
 </resources>

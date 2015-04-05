@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -33,45 +36,52 @@ public class EditTagActivity extends Activity {
 	private EditText tagEt;
 	private Button cancelBtn;
 	private Button okBtn;
+	private Logger log;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_edittag);
-		Log.d("smallest", "EdittagActivity setContentView finished");
-		Intent intent = getIntent();
-		String tag = intent.getStringExtra(MyConstants.TAG_EDIT);
-		tagEt = (EditText) findViewById(R.id.tag_et);
-		taskManager = TaskManager.getInstance(getBaseContext());
-		tagList = taskManager.getTagList();
-		Log.d("smallest","tagList size 47:"+tagList.size());
-		tagLv = (ListView) findViewById(R.id.edit_tag_lv);
-		mAdapter = new EditTagAdapter<String>(this, R.layout.tag_adapter_item,
-				tagList);
-		tagLv.setAdapter(mAdapter);
-		cancelBtn = (Button) findViewById(R.id.edit_tag_cancel);
-		okBtn = (Button) findViewById(R.id.edit_tag_ok);
-		cancelBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
-		okBtn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent();
-				Set<String> tagsSet = mAdapter.getCheckTags();
-				String tag = tagEt.getText().toString();
-				Log.d("smallest", "tag:" + tag);
-				tagsSet.add(tag);
-				Log.d("smallest", "tag size:" + tagsSet.size());
-				intent.putExtra(MyConstants.TAG_EDIT,
-						tagsSet.toArray(new String[] {}));
-				setResult(RESULT_OK, intent);
-				finish();
-			}
-		});
+		log = LoggerFactory.getLogger(CommentActivity.class);
+		try {
+			setContentView(R.layout.activity_edittag);
+
+			Log.d("smallest", "EdittagActivity setContentView finished");
+			Intent intent = getIntent();
+			String tag = intent.getStringExtra(MyConstants.TAG_EDIT);
+			tagEt = (EditText) findViewById(R.id.tag_et);
+			taskManager = TaskManager.getInstance(getBaseContext());
+			tagList = taskManager.getTagList();
+			Log.d("smallest", "tagList size 47:" + tagList.size());
+			tagLv = (ListView) findViewById(R.id.edit_tag_lv);
+			mAdapter = new EditTagAdapter<String>(this,
+					R.layout.tag_adapter_item, tagList);
+			tagLv.setAdapter(mAdapter);
+			cancelBtn = (Button) findViewById(R.id.edit_tag_cancel);
+			okBtn = (Button) findViewById(R.id.edit_tag_ok);
+			cancelBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					finish();
+				}
+			});
+			okBtn.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					Intent intent = new Intent();
+					Set<String> tagsSet = mAdapter.getCheckTags();
+					String tag = tagEt.getText().toString();
+					Log.d("smallest", "tag:" + tag);
+					tagsSet.add(tag);
+					Log.d("smallest", "tag size:" + tagsSet.size());
+					intent.putExtra(MyConstants.TAG_EDIT,
+							tagsSet.toArray(new String[] {}));
+					setResult(RESULT_OK, intent);
+					finish();
+				}
+			});
+		} catch (Exception e) {
+			log.error(e.getMessage());
+		}
 	}
 
 	private class EditTagAdapter<T> extends ArrayAdapter<T> {
@@ -83,7 +93,7 @@ public class EditTagActivity extends Activity {
 			super(context, resource, objects);
 			this.resource = resource;
 			tagList = (List<String>) objects;
-			Log.d("smallest","tagList size:"+tagList.size());
+			Log.d("smallest", "tagList size:" + tagList.size());
 		}
 
 		@Override

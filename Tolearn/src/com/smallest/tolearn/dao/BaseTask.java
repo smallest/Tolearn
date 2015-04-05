@@ -2,6 +2,7 @@ package com.smallest.tolearn.dao;
 
 public class BaseTask {
 	private String title = "";
+	private String updateTime = "";
 	private String startTime = "";
 	private String endTime = "";
 	private String desc = "";
@@ -91,5 +92,13 @@ public class BaseTask {
 
 	public void setState(int state) {
 		this.state = state;
+	}
+
+	public String getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(String updateTime) {
+		this.updateTime = updateTime;
 	}
 }

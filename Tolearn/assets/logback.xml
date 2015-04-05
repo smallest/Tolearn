@@ -1,0 +1,23 @@
+<!-- https://github.com/tony19/logback-android -->
+<configuration>
+  <!-- Create a file appender for a log in the application's data directory -->
+  <appender name="file" class="ch.qos.logback.core.FileAppender">
+    <file>/storage/sdcard0/tolearn/log/foo.log</file>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+<!-- Create a logcat appender -->
+  <appender name="logcat" class="ch.qos.logback.classic.android.LogcatAppender">
+    <encoder>
+      <pattern>%msg</pattern>
+    </encoder>
+  </appender>
+  <!-- Write INFO (and higher-level) messages to the log file -->
+  <root level="INFO">
+    <appender-ref ref="logcat" />
+  </root>
+  <root level="ERROR">
+    <appender-ref ref="file" />
+  </root>
+</configuration>

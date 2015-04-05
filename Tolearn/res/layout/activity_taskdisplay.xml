@@ -12,9 +12,9 @@
             android:id="@+id/title_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
             android:background="@null"
             android:textSize="@dimen/font_large" />
 
@@ -72,15 +72,59 @@
             android:hint="@string/add_your_desc" />
     </LinearLayout>
 
-    <Button
-        android:id="@+id/finish_tv"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/edit_task_btn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:gravity="center_horizontal"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
-        android:text="@string/finish" >
-    </Button>
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/edit_button_margin_bottom"
+        android:layout_marginRight="@dimen/edit_button_margin_right"
+        android:src="@drawable/ic_edit" />
+
+    <RelativeLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/linear_bar"
+            android:background="@color/bt_text_color" />
+
+        <LinearLayout
+            android:id="@+id/linear_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/comment_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/comment" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:background="@color/bt_text_color" />
+
+            <TextView
+                android:id="@+id/finish_tv"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/finish" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

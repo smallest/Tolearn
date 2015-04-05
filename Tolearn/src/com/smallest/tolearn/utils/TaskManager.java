@@ -1,7 +1,7 @@
 package com.smallest.tolearn.utils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.util.Log;
@@ -20,6 +20,7 @@ public class TaskManager {
 	private Context context;
 	private OnTodoSetChangedListener mOnTodoSetChangedListener;
 	private OnRepoSetChangedListener mOnRepoSetChangedListener;
+	private OnTaskStatusChangedListener mOnTaskStatusChangedListener;
 	private List<BaseTask> repoList;
 
 	private TaskManager(Context context) {
@@ -41,6 +42,10 @@ public class TaskManager {
 		return instance;
 	}
 
+	public BaseTask getTaskById(String tid) {
+		return TaskDBHelper.getTaskFromId(context, tid);
+	}
+
 	/**
 	 * change the state of task in the taskList to todo(1)
 	 * */
@@ -57,12 +62,26 @@ public class TaskManager {
 	}
 
 	public List<BaseTask> getRepoList() {
-		repoList = TaskDBHelper.getCurrentBaseTask(context);
+		repoList = TaskDBHelper.getRepoTasks(context);
 		return repoList;
 	}
 
+	/**
+	 * 获取标签的集合
+	 * */
 	public List<String> getTagList() {
 		return TaskDBHelper.getTagList(context);
+	}
+
+	/**
+	 * 获取每个标签archive的task的数量
+	 * */
+	public Map<String, String> getArchiveTagsMap() {
+		return TaskDBHelper.getArchiveTagsMap(context);
+	}
+
+	public List<BaseTask> getArchiveTasksByTag(String tagName) {
+		return TaskDBHelper.getArchiveTasksByTag(context, tagName);
 	}
 
 	public boolean unloadTask(BaseTask task) {
@@ -93,9 +112,13 @@ public class TaskManager {
 	 * add a new task
 	 * */
 	public boolean addTask(BaseTask task) {
+		String time = String.valueOf(System.currentTimeMillis());
+		task.setStartTime(time);
+		task.setTid(time);
+		task.setUpdateTime(time);
 		task.setState(BaseTask.STATE_REPO);
 		TaskDBHelper.insertInfo(context, task);
-		Log.d("smallest","add a task over");
+		Log.d("smallest", "add a task over");
 		if (repoList != null) {
 			repoList.add(task);
 		}
@@ -133,12 +156,6 @@ public class TaskManager {
 		return true;
 	}
 
-	public boolean archiveTask(BaseTask task) {
-		task.setState(BaseTask.STATE_ARCHIVE);
-		TaskDBHelper.updateInfo(context, task);
-		return true;
-	}
-
 	/**
 	 * remove a task from trash
 	 */
@@ -146,6 +163,40 @@ public class TaskManager {
 		task.setState(BaseTask.STATE_REMOVED);
 		TaskDBHelper.updateInfo(context, task);
 		return true;
+	}
+
+	/**
+	 * 把完成的task归档
+	 * */
+	public boolean archiveTask(BaseTask task) {
+		task.setState(BaseTask.STATE_ARCHIVE);
+		task.setUpdateTime(String.valueOf(System.currentTimeMillis()));
+		if (TaskDBHelper.updateInfo(context, task)) {
+			for (BaseTask taskItem : todoTaskList) {
+				if (taskItem.getTid().equals(task.getTid())) {
+					todoTaskList.remove(taskItem);
+					break;
+				}
+			}
+			loadNewTodoTasks(1);
+			if (mOnTodoSetChangedListener != null) {
+				mOnTodoSetChangedListener.dataSetChanged();
+			}
+			return true;
+		} else {
+			Log.d("tolearn", "archive task false");
+			return false;
+		}
+	}
+
+	public boolean modifyTaskDesc(BaseTask task) {
+		String time = String.valueOf(System.currentTimeMillis());
+		task.setUpdateTime(time);
+		boolean flag = TaskDBHelper.updateInfo(context, task);
+		if (flag && mOnTaskStatusChangedListener != null) {
+			mOnTaskStatusChangedListener.taskStatusChanged();
+		}
+		return flag;
 	}
 
 	public boolean modifyTitle(BaseTask task, String title) {
@@ -168,6 +219,21 @@ public class TaskManager {
 		return true;
 	}
 
+	/**
+	 * 修改Id为taskID的task的comment，并写入数据库
+	 * */
+	public boolean modifyComment(String taskID, String comment) {
+		BaseTask task = TaskDBHelper.getTaskFromId(context, taskID);
+		task.setComment(comment);
+		String time = String.valueOf(System.currentTimeMillis());
+		task.setUpdateTime(time);
+		TaskDBHelper.updateInfo(context, task);
+		if (mOnTaskStatusChangedListener != null) {
+			mOnTaskStatusChangedListener.taskStatusChanged();
+		}
+		return true;
+	}
+
 	public void setOnTodoSetChangedListener(
 			OnTodoSetChangedListener onTodoSetChangedListener) {
 		this.mOnTodoSetChangedListener = onTodoSetChangedListener;
@@ -182,7 +248,16 @@ public class TaskManager {
 		this.mOnRepoSetChangedListener = onRepoSetChangedListener;
 	}
 
+	public void setOnTaskStatusChangedListener(
+			OnTaskStatusChangedListener onTaskStatusChangedListener) {
+		this.mOnTaskStatusChangedListener = onTaskStatusChangedListener;
+	}
+
 	public interface OnRepoSetChangedListener {
 		public void dataSetChanged();
+	}
+
+	public interface OnTaskStatusChangedListener {
+		public void taskStatusChanged();
 	}
 }

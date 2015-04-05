@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ public class TolearnFragment extends Fragment {
 	private ArrayAdapter<BaseTask> mAdapter;
 	private List<BaseTask> taskList;
 	private TaskManager taskManager;
+	private SwipeMenuCreator creator;
+//	private int dispalyTaskPos = -1;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +57,7 @@ public class TolearnFragment extends Fragment {
 			}
 		});
 		mListView = (SwipeMenuListView) view.findViewById(R.id.tolearn_lv);
-		SwipeMenuCreator creator = new SwipeMenuCreator() {
+		creator = new SwipeMenuCreator() {
 
 			@Override
 			public void create(SwipeMenu menu) {

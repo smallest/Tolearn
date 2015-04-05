@@ -19,9 +19,6 @@ public class TaskInputCheck {
 			return instance.new CheckResult(-1, context.getResources()
 					.getString(R.string.no_title_toast));
 		} else {
-			String time = String.valueOf(System.currentTimeMillis());
-			task.setStartTime(time);
-			task.setTid(time);
 			return instance.new CheckResult(0, "");
 		}
 	}
